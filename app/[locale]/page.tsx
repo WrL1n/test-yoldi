@@ -12,7 +12,7 @@ type Props = {
   }
 }
 
-export default function Home({ params: { locale } }: Props) {
+export default async function Home({ params: { locale } }: Props) {
   setStaticParamsLocale(locale)
 
   return <>Hello world!</>
