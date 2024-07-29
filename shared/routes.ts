@@ -1,11 +1,9 @@
 export enum ROUTES {
   login = "log-in",
   register = "register",
+  home = "",
 }
 
-export const createLocaleRoutes = (locale: string) => {
-  return {
-    login: `/${locale}/${ROUTES.login}`,
-    register: `/${locale}/${ROUTES.register}`,
-  }
+export const createLocaleRoute = (locale: string, key: ROUTES) => {
+  return `/${locale}/${key}`
 }
