@@ -1,5 +1,7 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    REACT_APP_API_URL: string
+    NEXT_PUBLIC_API_URL: string
+    ENV_LOCAL_AUTH_SECRET: string
+    ENV_LOCAL_AUTH_SALT: string
   }
 }

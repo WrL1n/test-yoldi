@@ -7,7 +7,7 @@ generateApi({
   name: "yoldi-api.js",
   // set to `false` to prevent the tool from writing to disk
   output: path.resolve(process.cwd(), "./shared/__generated__"),
-  // url: `${process.env.REACT_APP_API_URL}/docs`,
+  // url: `${process.env.NEXT_PUBLIC_API_URL}/docs`,
   input: path.resolve(process.cwd(), "./public/api/schema.json"),
   // httpClientType: "axios", // or "fetch"
   defaultResponseAsSuccess: false,

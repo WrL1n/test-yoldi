@@ -10,11 +10,11 @@ interface ApiContextType {
 export const ApiContext = React.createContext<ApiContextType>({
   api: null,
   // updateAuthHeader: () => {},
-  httpClient: new HttpClient({ baseUrl: process.env.REACT_APP_API_URL }),
+  httpClient: new HttpClient({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
 })
 
 export const useApiContext = () => React.useContext(ApiContext)
-const httpClient = new HttpClient({ baseUrl: process.env.REACT_APP_API_URL })
+const httpClient = new HttpClient({ baseUrl: process.env.NEXT_PUBLIC_API_URL })
 const noRakeApi = new Api(httpClient)
 
 export function ApiProvider({ children }: PropsWithChildren) {
