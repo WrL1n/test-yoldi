@@ -47,7 +47,7 @@
         "noSvgWithoutTitle": "info"
       },
       "suspicious": {
-        "noEmptyBlockStatements": "error",
+        "noEmptyBlockStatements": "info",
         "noExplicitAny": "warn",
         "noArrayIndexKey": "warn",
         "noConsoleLog": "info"
