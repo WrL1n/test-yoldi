@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.13",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -32,6 +34,7 @@
     "swagger-typescript-api": "^13.0.13",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.1",
+    "tailwindcss-radix": "^3.0.3",
     "typescript": "^5"
   },
   "browserslist": {
