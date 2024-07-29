@@ -1,9 +1,9 @@
 import TailwindForms from "@tailwindcss/forms"
 import TailwindTypography from "@tailwindcss/typography"
-import type { Config } from "tailwindcss"
 import TailwindRadix from "tailwindcss-radix"
 
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -50,4 +50,3 @@ const config: Config = {
   },
   plugins: [TailwindForms, TailwindRadix({}), TailwindTypography],
 }
-export default config

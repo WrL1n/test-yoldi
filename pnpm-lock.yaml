@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@tailwindcss/forms':
+        specifier: ^0.5.7
+        version: 0.5.7(tailwindcss@3.4.7)
+      '@tailwindcss/typography':
+        specifier: ^0.5.13
+        version: 0.5.13(tailwindcss@3.4.7)
       axios:
         specifier: ^1.7.2
         version: 1.7.2
@@ -27,12 +33,6 @@ importers:
       '@biomejs/biome':
         specifier: 1.8.3
         version: 1.8.3
-      '@tailwindcss/forms':
-        specifier: ^0.5.7
-        version: 0.5.7(tailwindcss@3.4.7)
-      '@tailwindcss/typography':
-        specifier: ^0.5.13
-        version: 0.5.13(tailwindcss@3.4.7)
       '@types/node':
         specifier: ^20
         version: 20.14.13
