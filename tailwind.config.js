@@ -20,6 +20,7 @@ export default {
           DEFAULT: "#838383",
         },
         strokes: { secondary: "#E6E6E6", DEFAULT: "#D4D4D4" },
+        logo: "#FEFF80",
       },
       lineHeight: ({ theme }) => ({
         ...theme("spacing"),
