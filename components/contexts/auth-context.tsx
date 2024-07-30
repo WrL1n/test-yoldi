@@ -9,26 +9,33 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react"
 import { useApiContext } from "./api-context"
 
 interface AuthContextType {
   token: string | null
+  isAuthenticated: boolean
+}
+interface AuthActionsContextType {
   login: (email: string, password: string) => Promise<void>
   signUp: (email: string, name: string, password: string) => Promise<void>
   logout: () => void
-  isAuthenticated: boolean
 }
 
 const AuthContext = createContext<AuthContextType>({
   token: null,
+  isAuthenticated: false,
+})
+const AuthActionsContext = createContext<AuthActionsContextType>({
   login: async () => {},
   signUp: async () => {},
   logout: () => {},
-  isAuthenticated: false,
 })
+
 export const useAuthContext = () => useContext(AuthContext)
+export const useAuthActionsContext = () => useContext(AuthActionsContext)
 
 const TOKEN_EXPIRATION_TIME = 30 * 1000 // 1min
 // const TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000 // 24h
@@ -179,7 +186,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     if (!api) {
       throw new Error("API is not initialized")
     }
@@ -188,34 +195,47 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       const loginDto: LoginDto = { email, password }
       const response = await api.current.api.login(loginDto)
       await setAuthData(response.value)
+      router.push(createLocaleRoute(locale, ROUTES.home))
     } catch (error) {
       console.error("Login failed:", error)
       throw error
     }
-  }
+  }, [])
 
-  const signUp = async (email: string, name: string, password: string) => {
-    if (!api) {
-      throw new Error("API is not initialized")
-    }
+  const signUp = useCallback(
+    async (email: string, name: string, password: string) => {
+      if (!api) {
+        throw new Error("API is not initialized")
+      }
 
-    try {
-      const signUpDto: SignUpDto = { email, name, password }
-      const response = await api.current.api.signUp(signUpDto)
-      await setAuthData(response.value)
-    } catch (error) {
-      console.error("Sign up failed:", error)
-      throw error
-    }
-  }
+      try {
+        const signUpDto: SignUpDto = { email, name, password }
+        const response = await api.current.api.signUp(signUpDto)
+        await setAuthData(response.value)
+        router.push(createLocaleRoute(locale, ROUTES.home))
+      } catch (error) {
+        console.error("Sign up failed:", error)
+        throw error
+      }
+    },
+    [],
+  )
 
   const value: AuthContextType = {
     token,
-    login,
-    signUp,
-    logout,
     isAuthenticated: !!token && checkTokenValidity(),
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  const actions = useMemo(
+    () => ({ login, signUp, logout }),
+    [login, signUp, logout],
+  )
+
+  return (
+    <AuthContext.Provider value={value}>
+      <AuthActionsContext.Provider value={actions}>
+        {children}
+      </AuthActionsContext.Provider>
+    </AuthContext.Provider>
+  )
 }
