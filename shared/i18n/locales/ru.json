@@ -13,9 +13,22 @@
     "register": "Зарегистрироваться"
   },
   "register": {
-    "q": "ку register"
+    "title": "Регистрация в Yoldi Agency",
+    "name": "Имя",
+    "email": "E-mail",
+    "password": "Пароль",
+    "button": "Создать аккаунт",
+    "schema": {
+      "name": "Минимум 2 символа",
+      "email": "Минимум 2 символа",
+      "password": "Минимум 6 символов"
+    }
   },
   "login": {
     "q": "ку login"
+  },
+  "common": {
+    "input-show-password": "Показать пароль",
+    "input-hide-password": "Скрыть пароль"
   }
 }
