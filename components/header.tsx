@@ -14,9 +14,12 @@ export function Header() {
     <header>
       <nav className="flex items-center justify-between border-b border-strokes-secondary px-5 py-[15px]">
         <div className="gap-4 flex items-center">
-          <div className="bg-logo px-2 pt-4 w-[80px] h-[50px]">
+          <Link
+            className="bg-logo px-2 pt-4 w-[80px] h-[50px]"
+            href={createLocaleRoute(locale, ROUTES.home)}
+          >
             <Logo />
-          </div>
+          </Link>
           <div className="hidden md:block max-w-[225px]">{t("title")}</div>
         </div>
         {/* хз почему при перемещении клавиатурой эта ссылка не первая^^ */}
