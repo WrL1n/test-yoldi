@@ -2,21 +2,15 @@
 
 import { useAuthActionsContext } from "@/components/contexts/auth-context"
 import { Button, FormInput } from "@/components/ui"
-import { EnvelopeIcon, LockIcon, UserIcon } from "@/components/ui/icons"
+import { EnvelopeIcon, LockIcon } from "@/components/ui/icons"
 import { useScopedI18n } from "@/shared/i18n/client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-export const RegisterForm = () => {
-  const t = useScopedI18n("register")
-
-  const { signUp } = useAuthActionsContext()
-
+export const LoginForm = () => {
+  const t = useScopedI18n("login")
   const schema = z.object({
-    name: z.string().min(2, {
-      message: t("schema.name"),
-    }),
     email: z.string().min(2, {
       message: t("schema.email"),
     }),
@@ -35,6 +29,8 @@ export const RegisterForm = () => {
     }
   }
 
+  const { login } = useAuthActionsContext()
+
   const {
     register,
     handleSubmit,
@@ -45,9 +41,9 @@ export const RegisterForm = () => {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = async ({ name, email, password }: FormData) => {
+  const onSubmit = async ({ email, password }: FormData) => {
     try {
-      await signUp(name, email, password)
+      await login(email, password)
     } catch (error) {
       setError("root.backendError", {
         type: "custom",
@@ -64,21 +60,6 @@ export const RegisterForm = () => {
       method="POST"
     >
       <h1 className="text-title">{t("title")}</h1>
-      <FormInput
-        label={t("name")}
-        placeholder={t("name")}
-        invisibleLabel
-        inputProps={{
-          ...register("name", {
-            onChange: () => {
-              clearErrors(["name", "root.backendError"])
-            },
-          }),
-          type: "text",
-          startAdornment: <UserIcon />,
-        }}
-        errorText={errors?.name?.message}
-      />
       <FormInput
         label={t("email")}
         placeholder={t("email")}

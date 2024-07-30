@@ -17,15 +17,29 @@
     "name": "Имя",
     "email": "E-mail",
     "password": "Пароль",
-    "button": "Создать аккаунт",
     "schema": {
       "name": "Минимум 2 символа",
       "email": "Минимум 2 символа",
       "password": "Минимум 6 символов"
+    },
+    "submit": {
+      "button": "Создать аккаунт",
+      "error": "Произошла ошибка, попробуй позже"
     }
   },
   "login": {
-    "q": "ку login"
+    "title": "Вход в Yoldi Agency",
+    "email": "E-mail",
+    "password": "Пароль",
+    "button": "Войти",
+    "schema": {
+      "email": "Минимум 2 символа",
+      "password": "Минимум 6 символов"
+    },
+    "submit": {
+      "button": "Войти",
+      "error": "Произошла ошибка, попробуй позже"
+    }
   },
   "common": {
     "input-show-password": "Показать пароль",

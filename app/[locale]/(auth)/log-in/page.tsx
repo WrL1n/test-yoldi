@@ -1,6 +1,7 @@
 import type { AvailableLanguage } from "@/shared/i18n/consts"
 import { getScopedI18n, getStaticParams } from "@/shared/i18n/server"
 import { setStaticParamsLocale } from "next-international/server"
+import { LoginForm } from "../components/login-form"
 
 export function generateStaticParams() {
   return getStaticParams()
@@ -17,5 +18,5 @@ export default async function Page({ params: { locale } }: Props) {
 
   const t = await getScopedI18n("login")
 
-  return <div>{t("q")}</div>
+  return <LoginForm />
 }
