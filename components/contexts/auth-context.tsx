@@ -19,8 +19,8 @@ interface AuthContextType {
   isAuthenticated: boolean
 }
 interface AuthActionsContextType {
-  login: (email: string, password: string) => Promise<void>
-  signUp: (email: string, name: string, password: string) => Promise<void>
+  login: (loginDto: LoginDto) => Promise<void>
+  signUp: (signUpDto: SignUpDto) => Promise<void>
   logout: () => void
 }
 
@@ -186,13 +186,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (loginDto: LoginDto) => {
     if (!api) {
       throw new Error("API is not initialized")
     }
 
     try {
-      const loginDto: LoginDto = { email, password }
       const response = await api.current.api.login(loginDto)
       await setAuthData(response.value)
       router.push(createLocaleRoute(locale, ROUTES.home))
@@ -202,24 +201,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }, [])
 
-  const signUp = useCallback(
-    async (email: string, name: string, password: string) => {
-      if (!api) {
-        throw new Error("API is not initialized")
-      }
+  const signUp = useCallback(async (signUpDto: SignUpDto) => {
+    if (!api) {
+      throw new Error("API is not initialized")
+    }
 
-      try {
-        const signUpDto: SignUpDto = { email, name, password }
-        const response = await api.current.api.signUp(signUpDto)
-        await setAuthData(response.value)
-        router.push(createLocaleRoute(locale, ROUTES.home))
-      } catch (error) {
-        console.error("Sign up failed:", error)
-        throw error
-      }
-    },
-    [],
-  )
+    try {
+      const response = await api.current.api.signUp(signUpDto)
+      await setAuthData(response.value)
+      router.push(createLocaleRoute(locale, ROUTES.home))
+    } catch (error) {
+      console.error("Sign up failed:", error)
+      throw error
+    }
+  }, [])
 
   const value: AuthContextType = {
     token,

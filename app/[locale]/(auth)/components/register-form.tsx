@@ -45,9 +45,9 @@ export const RegisterForm = () => {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = async ({ name, email, password }: FormData) => {
+  const onSubmit = async (data: FormData) => {
     try {
-      await signUp(name, email, password)
+      await signUp(data)
     } catch (error) {
       setError("root.backendError", {
         type: "custom",

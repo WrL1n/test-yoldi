@@ -41,9 +41,9 @@ export const LoginForm = () => {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = async ({ email, password }: FormData) => {
+  const onSubmit = async (data: FormData) => {
     try {
-      await login(email, password)
+      await login(data)
     } catch (error) {
       setError("root.backendError", {
         type: "custom",
