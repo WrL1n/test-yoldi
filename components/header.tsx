@@ -18,18 +18,20 @@ export function Header() {
 
   return (
     <header className="sticky top-0 bg-white">
-      <nav className="flex items-center justify-between border-b border-strokes-secondary px-5 py-[15px]">
-        <div className="gap-4 flex items-center">
+      <nav className="flex items-center justify-between border-b border-strokes-secondary px-5 py-[15px] h-20">
+        <div className="gap-5 flex items-center">
           <Link
-            className="bg-logo px-2 pt-4 w-[80px] h-[50px]"
+            className="bg-logo px-2 pt-4 w-[80px] h-[50px] flex items-center justify-center"
             href={createLocaleRoute(locale, ROUTES.home)}
           >
             <Logo />
           </Link>
-          <div className="hidden md:block max-w-[225px]">{t("title")}</div>
+          <div className="hidden md:block w-[226px] text-paragraph">
+            {t("title")}
+          </div>
         </div>
         {profile ? (
-          <div className="flex items-center  gap-x-5 min-w-[155px] max-w-[200px]">
+          <div className="flex items-center gap-x-5 min-w-[155px] max-w-[200px]">
             <div className="text-paragraph text-right truncate">
               {profile.name}
             </div>
