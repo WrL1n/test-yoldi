@@ -1,25 +1,7 @@
 import { Avatar } from "@/components/ui/avatar"
 import type { ProfileDto } from "@/shared/__generated__/yoldi-api"
+import { getInitials } from "@/shared/utils"
 import { memo } from "react"
-
-const getInitials = (name: string, limit = 2): string => {
-  if (typeof name !== "string" || !name) return ""
-
-  let initials = ""
-  let wordCount = 0
-  let prevChar = " "
-
-  for (let i = 0; i < name.length && wordCount < limit; i++) {
-    const char = name[i]
-    if (prevChar === " " && char !== " ") {
-      initials += char.toUpperCase()
-      wordCount++
-    }
-    prevChar = char
-  }
-
-  return initials
-}
 
 export const UserListItem = memo(({ user }: { user: ProfileDto }) => {
   const initials = getInitials(user.name)

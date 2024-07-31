@@ -14,3 +14,22 @@ export function isApiError(error: unknown): error is ApiError {
     "message" in (error as any).error
   )
 }
+
+export const getInitials = (name: string, limit = 2): string => {
+  if (typeof name !== "string" || !name) return ""
+
+  let initials = ""
+  let wordCount = 0
+  let prevChar = " "
+
+  for (let i = 0; i < name.length && wordCount < limit; i++) {
+    const char = name[i]
+    if (prevChar === " " && char !== " ") {
+      initials += char
+      wordCount++
+    }
+    prevChar = char
+  }
+
+  return initials
+}
