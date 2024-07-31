@@ -28,6 +28,10 @@ export default {
         160: "160%",
       }),
       fontSize: ({ theme }) => ({
+        "title-super": [
+          36,
+          { lineHeight: "140%", letterSpacing: 0, fontWeight: 400 },
+        ],
         title: [30, { lineHeight: "140%", letterSpacing: 0, fontWeight: 500 }],
         subtitle: [
           18,

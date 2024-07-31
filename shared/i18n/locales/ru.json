@@ -44,5 +44,8 @@
   "common": {
     "input-show-password": "Показать пароль",
     "input-hide-password": "Скрыть пароль"
+  },
+  "user-list": {
+    "title": "Список аккаунтов"
   }
 }
