@@ -15,7 +15,6 @@ import {
 import { useApiContext } from "./api-context"
 
 interface AuthContextType {
-  token: string | null
   isAuthenticated: boolean
 }
 interface AuthActionsContextType {
@@ -25,7 +24,6 @@ interface AuthActionsContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({
-  token: null,
   isAuthenticated: false,
 })
 const AuthActionsContext = createContext<AuthActionsContextType>({
@@ -37,7 +35,8 @@ const AuthActionsContext = createContext<AuthActionsContextType>({
 export const useAuthContext = () => useContext(AuthContext)
 export const useAuthActionsContext = () => useContext(AuthActionsContext)
 
-const TOKEN_EXPIRATION_TIME = 30 * 1000 // 1min
+const AUTH_CHECK_TIMEOUT = 30 * 1000
+const TOKEN_EXPIRATION_TIME = 60 * 1000 // 1min
 // const TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000 // 24h
 const SECRET_KEY = process.env.ENV_LOCAL_AUTH_SECRET
 const SALT = process.env.ENV_LOCAL_AUTH_SALT
@@ -114,64 +113,57 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 }) => {
   const { api } = useApiContext()
   const [token, setToken] = useState<string | null>(null)
-  const [expirationTime, setExpirationTime] = useState<number | null>(null)
   const router = useRouter()
 
   const logout = useCallback(() => {
     setToken(null)
-    setExpirationTime(null)
     localStorage.removeItem(LOCAL_STORAGE_KEY)
     router.push(createLocaleRoute(locale, ROUTES.home))
   }, [router, locale])
 
-  const checkTokenValidity = useCallback(() => {
-    if (expirationTime && Date.now() > expirationTime) {
-      logout()
+  const checkTokenValidity = useCallback(async () => {
+    const storedData = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (!storedData) {
       return false
     }
-    return true
-  }, [expirationTime, logout])
 
-  useEffect(() => {
-    const storedData = localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (storedData) {
-      decryptData(storedData)
-        .then((decryptedData) => {
-          try {
-            const { token: decryptedToken, expiration } =
-              JSON.parse(decryptedData)
-            if (Date.now() < expiration) {
-              setToken(decryptedToken)
-              setExpirationTime(expiration)
-            } else {
-              logout()
-            }
-          } catch (error) {
-            console.error("Failed to parse decrypted token:", error)
-            logout()
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to decrypt token:", error)
-          logout()
-        })
+    try {
+      const decryptedData = await decryptData(storedData)
+      const { expiration } = JSON.parse(decryptedData)
+
+      return Date.now() <= expiration
+    } catch (error) {
+      console.error("Failed to check token validity:", error)
+      return false
     }
-  }, [logout])
+  }, [])
 
   useEffect(() => {
-    if (expirationTime) {
-      const timeoutId = setTimeout(() => {
+    const checkAuth = async () => {
+      const isValid = await checkTokenValidity()
+      if (!isValid) {
         logout()
-      }, expirationTime - Date.now())
-
-      return () => clearTimeout(timeoutId)
+      }
     }
-  }, [expirationTime, logout])
+    checkAuth()
+  }, [checkTokenValidity, logout])
+
+  useEffect(() => {
+    if (token) {
+      const checkTokenInterval = setInterval(async () => {
+        const isValid = await checkTokenValidity()
+        if (!isValid) {
+          logout()
+        }
+      }, AUTH_CHECK_TIMEOUT)
+
+      return () => clearInterval(checkTokenInterval)
+    }
+  }, [token, checkTokenValidity, logout])
 
   const setAuthData = async (newToken: string) => {
     const newExpirationTime = Date.now() + TOKEN_EXPIRATION_TIME
     setToken(newToken)
-    setExpirationTime(newExpirationTime)
 
     const dataToStore = JSON.stringify({
       token: newToken,
@@ -217,8 +209,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   }, [])
 
   const value: AuthContextType = {
-    token,
-    isAuthenticated: !!token && checkTokenValidity(),
+    isAuthenticated: !!token,
   }
 
   const actions = useMemo(
