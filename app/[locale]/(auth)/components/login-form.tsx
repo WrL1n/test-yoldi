@@ -37,7 +37,7 @@ export const LoginForm = () => {
     handleSubmit,
     clearErrors,
     setError,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormDataWithErrors>({
     resolver: zodResolver(schema),
   })
@@ -99,9 +99,7 @@ export const LoginForm = () => {
           {backendError}
         </div>
       )}
-      <Button type="submit" disabled={!isValid}>
-        {t("submit.button")}
-      </Button>
+      <Button type="submit">{t("submit.button")}</Button>
     </form>
   )
 }

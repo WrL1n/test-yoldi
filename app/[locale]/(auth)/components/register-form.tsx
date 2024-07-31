@@ -41,7 +41,7 @@ export const RegisterForm = () => {
     handleSubmit,
     clearErrors,
     setError,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormDataWithErrors>({
     resolver: zodResolver(schema),
   })
