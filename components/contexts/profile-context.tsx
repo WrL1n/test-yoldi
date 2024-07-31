@@ -6,6 +6,7 @@ import React, {
   type PropsWithChildren,
 } from "react"
 import { useProtectedFetch } from "../hooks/use-protected-fetch"
+import { useAuthContext } from "./auth-context"
 
 type ProfileContextType = {
   profile: ProfileDto | null
@@ -22,6 +23,8 @@ const ProfileContext = createContext<ProfileContextType>({
 export const useProfileContext = () => useContext(ProfileContext)
 
 export function ProfileProvider({ children }: PropsWithChildren) {
+  const { isAuthenticated } = useAuthContext()
+
   const {
     data: profile,
     error,
@@ -32,11 +35,11 @@ export function ProfileProvider({ children }: PropsWithChildren) {
 
   const value = useMemo(
     () => ({
-      profile: profile ?? null,
-      error,
-      isLoading,
+      profile: isAuthenticated ? profile ?? null : null,
+      error: isAuthenticated ? error : null,
+      isLoading: isAuthenticated ? isLoading : false,
     }),
-    [profile, error, isLoading],
+    [profile, error, isLoading, isAuthenticated],
   )
 
   return (
