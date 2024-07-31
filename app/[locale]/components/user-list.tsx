@@ -1,13 +1,14 @@
 "use client"
 
 import { useEntitiesContext } from "@/components/contexts/entities-context"
+import { ScrollToTop } from "@/components/ui"
 import { useScopedI18n } from "@/shared/i18n/client"
 import { UserListItem } from "./user-list-item"
 import { UserListWrapper } from "./user-list-wrapper"
 
 export const UserList = () => {
   const t = useScopedI18n("user-list")
-  const { users, isLoading, error } = useEntitiesContext()
+  const { users } = useEntitiesContext()
 
   return (
     <UserListWrapper>
@@ -17,6 +18,8 @@ export const UserList = () => {
           <UserListItem key={user.slug} user={user} />
         ))}
       </ul>
+
+      <ScrollToTop />
     </UserListWrapper>
   )
 }

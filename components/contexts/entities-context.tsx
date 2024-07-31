@@ -42,7 +42,7 @@ export function EntitiesProvider({ children }: PropsWithChildren) {
 
   const value = useMemo(
     () => ({
-      users: (usersData?.slice(0, 5) ?? []) as ProfileDto[],
+      users: (usersData ?? []) as ProfileDto[],
       usersError: usersError || null,
       usersLoading,
     }),

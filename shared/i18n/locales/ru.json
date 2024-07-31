@@ -43,7 +43,8 @@
   },
   "common": {
     "input-show-password": "Показать пароль",
-    "input-hide-password": "Скрыть пароль"
+    "input-hide-password": "Скрыть пароль",
+    "scroll-to-top": "Вверх!"
   },
   "user-list": {
     "title": "Список аккаунтов"
