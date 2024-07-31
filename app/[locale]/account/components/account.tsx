@@ -1,11 +1,11 @@
 "use client"
 
+import { useAuthActionsContext } from "@/components/contexts/auth-context"
 import { Button } from "@/components/ui"
 import { Avatar } from "@/components/ui/avatar"
 import { PenIcon } from "@/components/ui/icons"
-import { cn } from "@/shared/clsx"
+import { ExitIcon } from "@/components/ui/icons/exit"
 import { useScopedI18n } from "@/shared/i18n/client"
-import { useState } from "react"
 import { AccountBackground } from "./account-background"
 
 export interface AccountProps {
@@ -14,11 +14,11 @@ export interface AccountProps {
 }
 
 export const Account = ({
-  isEditable = true,
+  isEditable = false,
   existBg = false,
 }: AccountProps) => {
   const t = useScopedI18n("account")
-
+  const { logout } = useAuthActionsContext()
   return (
     <>
       <AccountBackground isEditable={isEditable} existBg={existBg} />
@@ -32,11 +32,39 @@ export const Account = ({
             <div className="text-title truncate">Name</div>
             <div className="text-paragraph text-gray">Email</div>
           </div>
-          <Button size="extra-sm" variant="outline" className="max-w-[200px]">
-            <PenIcon />
-            {t("edit-button")}
-          </Button>
+          {isEditable && (
+            <Button size="extra-sm" variant="outline" className="max-w-[200px]">
+              <PenIcon />
+              {t("edit-button")}
+            </Button>
+          )}
         </div>
+
+        <p className="mb-[60px] max-w-[600px] mt-[60px] text-paragraph text-pretty">
+          Similique veniam illum cupiditate voluptatem ex officiis excepturi non
+          cupiditate. Saepe ut laudantium minus vel quam ullam. Autem
+          necessitatibus soluta illo modi. Repudiandae ut aspernatur
+          dignissimos. Officia eum ut doloribus. Iure ratione porro minima
+          possimus maxime. Nobis non reprehenderit est est ea voluptas iste. Id
+          quia quisquam veritatis fuga exercitationem odit ea et est. Dolor
+          repudiandae non repellendus nisi ullam facere. Pariatur dolorem a
+          officia eum et unde. Et et et culpa officia odio illo quisquam aliquam
+          ullam. Vitae a eum perspiciatis officiis est molestiae dolorem. Nobis
+          quas facere ut corporis. Sunt et ipsum occaecati et est est et
+          quisquam omnis.
+        </p>
+
+        {isEditable && (
+          <Button
+            size="extra-sm"
+            variant="outline"
+            className="max-w-[130px]"
+            onClick={logout}
+          >
+            <ExitIcon />
+            {t("logout")}
+          </Button>
+        )}
       </section>
     </>
   )

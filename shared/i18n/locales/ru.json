@@ -54,6 +54,7 @@
     "set-bg-image-desc": "Загрузить фон профиля",
     "set-bg-image-button": "Загрузить",
     "remove-bg-image-desc": "Удалить фон профиля",
-    "remove-bg-image-button": "Удалить"
+    "remove-bg-image-button": "Удалить",
+    "logout": "Выйти"
   }
 }
