@@ -16,8 +16,7 @@ export function Header() {
         <div className="gap-5 flex items-center">
           <Link
             className="bg-logo px-2 pt-4 w-[80px] h-[50px] flex items-center justify-center"
-            // href={createLocaleRoute(locale, ROUTES.home)}
-            href="#"
+            href={createLocaleRoute(locale, ROUTES.home)}
           >
             <Logo />
           </Link>
