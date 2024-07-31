@@ -63,7 +63,7 @@ export const RegisterForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       method="POST"
     >
-      <h1 className="text-title">{t("title")}</h1>
+      <h1 className="text-title max-w-[68%] md:max-w-[63%]">{t("title")}</h1>
       <FormInput
         label={t("name")}
         placeholder={t("name")}
