@@ -118,9 +118,7 @@ export const RegisterForm = () => {
           {backendError}
         </div>
       )}
-      <Button type="submit" disabled={!isValid}>
-        {t("submit.button")}
-      </Button>
+      <Button type="submit">{t("submit.button")}</Button>
     </form>
   )
 }
