@@ -21,6 +21,7 @@ interface AuthActionsContextType {
   login: (loginDto: LoginDto) => Promise<void>
   signUp: (signUpDto: SignUpDto) => Promise<void>
   logout: () => void
+  getToken: () => Promise<string | null>
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -30,14 +31,15 @@ const AuthActionsContext = createContext<AuthActionsContextType>({
   login: async () => {},
   signUp: async () => {},
   logout: () => {},
+  getToken: async () => null,
 })
 
 export const useAuthContext = () => useContext(AuthContext)
 export const useAuthActionsContext = () => useContext(AuthActionsContext)
 
 const AUTH_CHECK_TIMEOUT = 30 * 1000
-const TOKEN_EXPIRATION_TIME = 60 * 1000 // 1min
-// const TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000 // 24h
+// const TOKEN_EXPIRATION_TIME = 20 * 1000 // 1min
+const TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000 // 24h
 const SECRET_KEY = process.env.ENV_LOCAL_AUTH_SECRET
 const SALT = process.env.ENV_LOCAL_AUTH_SALT
 const LOCAL_STORAGE_KEY = "authData"
@@ -112,59 +114,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   children,
 }) => {
   const { api } = useApiContext()
-  const [token, setToken] = useState<string | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
 
-  const logout = useCallback(() => {
-    setToken(null)
-    localStorage.removeItem(LOCAL_STORAGE_KEY)
-    router.push(createLocaleRoute(locale, ROUTES.home))
-  }, [router, locale])
-
-  const checkTokenValidity = useCallback(async () => {
+  const getToken = useCallback(async (): Promise<string | null> => {
     const storedData = localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (!storedData) {
-      return false
-    }
+    if (!storedData) return null
 
     try {
       const decryptedData = await decryptData(storedData)
-      const { expiration } = JSON.parse(decryptedData)
+      const { token, expiration } = JSON.parse(decryptedData)
 
-      return Date.now() <= expiration
+      if (Date.now() > expiration) {
+        localStorage.removeItem(LOCAL_STORAGE_KEY)
+        setIsAuthenticated(false)
+        return null
+      }
+
+      return token
     } catch (error) {
-      console.error("Failed to check token validity:", error)
-      return false
+      console.error("Failed to get token:", error)
+      return null
     }
   }, [])
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const isValid = await checkTokenValidity()
-      if (!isValid) {
-        logout()
-      }
-    }
-    checkAuth()
-  }, [checkTokenValidity, logout])
-
-  useEffect(() => {
-    if (token) {
-      const checkTokenInterval = setInterval(async () => {
-        const isValid = await checkTokenValidity()
-        if (!isValid) {
-          logout()
-        }
-      }, AUTH_CHECK_TIMEOUT)
-
-      return () => clearInterval(checkTokenInterval)
-    }
-  }, [token, checkTokenValidity, logout])
-
   const setAuthData = async (newToken: string) => {
     const newExpirationTime = Date.now() + TOKEN_EXPIRATION_TIME
-    setToken(newToken)
-
     const dataToStore = JSON.stringify({
       token: newToken,
       expiration: newExpirationTime,
@@ -173,53 +148,86 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     try {
       const encryptedData = await encryptData(dataToStore)
       localStorage.setItem(LOCAL_STORAGE_KEY, encryptedData)
+      setIsAuthenticated(true)
     } catch (error) {
       console.error("Failed to encrypt and store token:", error)
     }
   }
 
-  const login = useCallback(async (loginDto: LoginDto) => {
-    if (!api) {
-      throw new Error("API is not initialized")
-    }
+  const login = useCallback(
+    async (loginDto: LoginDto) => {
+      if (!api) {
+        throw new Error("API is not initialized")
+      }
 
-    try {
-      const response = await api.current.api.login(loginDto)
-      await setAuthData(response.value)
-      router.push(createLocaleRoute(locale, ROUTES.home))
-    } catch (error) {
-      console.error("Login failed:", error)
-      throw error
-    }
-  }, [])
+      try {
+        const response = await api.current.api.login(loginDto)
+        console.log("ttt", { response })
+        await setAuthData(response.value)
+        router.push(createLocaleRoute(locale, ROUTES.home))
+      } catch (error) {
+        console.error("Login failed:", error)
+        throw error
+      }
+    },
+    [api, router, locale],
+  )
 
-  const signUp = useCallback(async (signUpDto: SignUpDto) => {
-    if (!api) {
-      throw new Error("API is not initialized")
-    }
+  const signUp = useCallback(
+    async (signUpDto: SignUpDto) => {
+      if (!api) {
+        throw new Error("API is not initialized")
+      }
 
-    try {
-      const response = await api.current.api.signUp(signUpDto)
-      await setAuthData(response.value)
-      router.push(createLocaleRoute(locale, ROUTES.home))
-    } catch (error) {
-      console.error("Sign up failed:", error)
-      throw error
-    }
-  }, [])
+      try {
+        const response = await api.current.api.signUp(signUpDto)
+        await setAuthData(response.value)
+        router.push(createLocaleRoute(locale, ROUTES.home))
+      } catch (error) {
+        console.error("Sign up failed:", error)
+        throw error
+      }
+    },
+    [api, router, locale],
+  )
 
-  const value: AuthContextType = {
-    isAuthenticated: !!token,
-  }
+  const logout = useCallback(() => {
+    localStorage.removeItem(LOCAL_STORAGE_KEY)
+    setIsAuthenticated(false)
+    router.push(createLocaleRoute(locale, ROUTES.home))
+  }, [router, locale])
 
-  const actions = useMemo(
-    () => ({ login, signUp, logout }),
-    [login, signUp, logout],
+  const checkAuthentication = useCallback(async () => {
+    const token = await getToken()
+    setIsAuthenticated(!!token)
+  }, [getToken])
+
+  useEffect(() => {
+    checkAuthentication()
+  }, [checkAuthentication])
+
+  useEffect(() => {
+    checkAuthentication()
+
+    const intervalId = setInterval(() => {
+      checkAuthentication()
+    }, AUTH_CHECK_TIMEOUT)
+
+    return () => clearInterval(intervalId)
+  }, [checkAuthentication])
+
+  const authContextValue = useMemo(
+    () => ({ isAuthenticated }),
+    [isAuthenticated],
+  )
+  const authActionsContextValue = useMemo(
+    () => ({ getToken, login, signUp, logout }),
+    [getToken, login, signUp, logout],
   )
 
   return (
-    <AuthContext.Provider value={value}>
-      <AuthActionsContext.Provider value={actions}>
+    <AuthContext.Provider value={authContextValue}>
+      <AuthActionsContext.Provider value={authActionsContextValue}>
         {children}
       </AuthActionsContext.Provider>
     </AuthContext.Provider>

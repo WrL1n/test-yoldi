@@ -9,14 +9,15 @@ import useSWR from "swr"
 
 type EntitiesContextType = {
   users: ProfileDto[]
-  error: null
-  isLoading: boolean
+
+  usersError: Error | null
+  usersLoading: boolean
 }
 
 export const EntitiesContext = createContext<EntitiesContextType>({
   users: [],
-  error: null,
-  isLoading: false,
+  usersError: null,
+  usersLoading: false,
 })
 
 export const useEntitiesContext = () => useContext(EntitiesContext)
@@ -33,18 +34,19 @@ const fetcher = (
   })
 
 export function EntitiesProvider({ children }: PropsWithChildren) {
-  const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
-    fetcher,
-  )
+  const {
+    data: usersData,
+    error: usersError,
+    isLoading: usersLoading,
+  } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, fetcher)
 
   const value = useMemo(
     () => ({
-      users: (data ?? []) as ProfileDto[],
-      error,
-      isLoading,
+      users: (usersData?.slice(0, 5) ?? []) as ProfileDto[],
+      usersError: usersError || null,
+      usersLoading,
     }),
-    [data, error, isLoading],
+    [usersData, usersError, usersLoading],
   )
 
   return (
