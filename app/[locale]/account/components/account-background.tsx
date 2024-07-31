@@ -3,16 +3,16 @@ import { ImageIcon, TrashIcon, UploadIcon } from "@/components/ui/icons"
 import { cn } from "@/shared/clsx"
 import { useScopedI18n } from "@/shared/i18n/client"
 import { useState } from "react"
-import type { AccountProps } from "./account"
 
-type AccountBackgroundProps = Pick<AccountProps, "isEditable" | "existBg">
+interface AccountBackgroundProps {
+  isEditable?: boolean
+}
 
 const TIMEOUT_TO_DISABLE_BG_BUTTON_ON_MOBILES = 4000
 
-export const AccountBackground = ({
-  isEditable,
-  existBg,
-}: AccountBackgroundProps) => {
+export const AccountBackground = ({ isEditable }: AccountBackgroundProps) => {
+  const existBg = false
+
   const t = useScopedI18n("account")
   const [isBgHovered, setIsBgHovered] = useState(false)
 

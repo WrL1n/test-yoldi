@@ -1,7 +1,7 @@
 import type { AvailableLanguage } from "@/shared/i18n/consts"
 import { getStaticParams } from "@/shared/i18n/server"
 import { setStaticParamsLocale } from "next-international/server"
-import { Account } from "./components/account"
+import { Account } from "../components/account"
 
 export function generateStaticParams() {
   return getStaticParams()
