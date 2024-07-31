@@ -13,9 +13,7 @@ export function Page({ children, locale }: PropsWithChildren<Props>) {
     <Providers locale={locale}>
       <div className="grid grid-rows-[auto_1fr_auto] min-h-[100dvh]">
         <Header />
-        <main className="bg-transparent md:bg-background-secondary">
-          {children}
-        </main>
+        <main className="bg-white">{children}</main>
         <Footer />
       </div>
     </Providers>

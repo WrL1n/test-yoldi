@@ -1,5 +1,11 @@
 import { Api, HttpClient } from "@/shared/__generated__/yoldi-api"
-import React, { useRef, type PropsWithChildren } from "react"
+import type React from "react"
+import {
+  type PropsWithChildren,
+  createContext,
+  useContext,
+  useRef,
+} from "react"
 
 interface ApiContextType {
   api: React.MutableRefObject<Api<unknown>> | null
@@ -7,13 +13,13 @@ interface ApiContextType {
   httpClient: HttpClient<unknown>
 }
 
-export const ApiContext = React.createContext<ApiContextType>({
+export const ApiContext = createContext<ApiContextType>({
   api: null,
   // updateAuthHeader: () => {},
   httpClient: new HttpClient({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
 })
 
-export const useApiContext = () => React.useContext(ApiContext)
+export const useApiContext = () => useContext(ApiContext)
 const httpClient = new HttpClient({ baseUrl: process.env.NEXT_PUBLIC_API_URL })
 const noRakeApi = new Api(httpClient)
 

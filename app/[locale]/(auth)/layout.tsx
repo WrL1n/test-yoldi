@@ -15,7 +15,7 @@ export function generateStaticParams() {
 
 export default function SubLayout({ children, params: { locale } }: Props) {
   return (
-    <div className="grid place-items-center h-full">
+    <div className="grid place-items-center h-full bg-background-secondary">
       <FormWrapper>{children}</FormWrapper>
     </div>
   )
