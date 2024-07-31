@@ -4,6 +4,7 @@ import { useAuthActionsContext } from "@/components/contexts/auth-context"
 import { Button, FormInput } from "@/components/ui"
 import { EnvelopeIcon, LockIcon, UserIcon } from "@/components/ui/icons"
 import { useScopedI18n } from "@/shared/i18n/client"
+import { isApiError } from "@/shared/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -49,10 +50,12 @@ export const RegisterForm = () => {
     try {
       await signUp(data)
     } catch (error) {
-      setError("root.backendError", {
-        type: "custom",
-        message: error?.error?.message || t("submit.error"),
-      })
+      if (isApiError(error)) {
+        setError("root.backendError", {
+          type: "custom",
+          message: error?.error?.message || t("submit.error"),
+        })
+      }
     }
   }
   const backendError = errors?.root?.backendError?.message

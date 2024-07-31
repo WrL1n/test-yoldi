@@ -21,7 +21,16 @@ export const EntitiesContext = createContext<EntitiesContextType>({
 
 export const useEntitiesContext = () => useContext(EntitiesContext)
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json())
+const fetcher = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<ProfileDto[]> =>
+  fetch(input, init).then((res) => {
+    if (!res.ok) {
+      throw new Error("An error occurred while fetching the data.")
+    }
+    return res.json() as Promise<ProfileDto[]>
+  })
 
 export function EntitiesProvider({ children }: PropsWithChildren) {
   const { data, error, isLoading } = useSWR(
@@ -31,7 +40,7 @@ export function EntitiesProvider({ children }: PropsWithChildren) {
 
   const value = useMemo(
     () => ({
-      users: data,
+      users: (data ?? []) as ProfileDto[],
       error,
       isLoading,
     }),
