@@ -15,7 +15,7 @@ export function Footer() {
   return (
     <>
       {!isAuthenticated ? (
-        <footer className="h-[72px] border-t border-strokes-secondary px-5 grid place-items-center text-paragraph text-gray">
+        <footer className="sticky bottom-0 bg-white h-[72px] border-t border-strokes-secondary px-5 grid place-items-center text-paragraph text-gray">
           {path === createLocaleRoute(locale, ROUTES.register) ? (
             <div className="m-auto">
               {t("got-account")}{" "}
