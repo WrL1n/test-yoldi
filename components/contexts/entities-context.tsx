@@ -5,7 +5,7 @@ import React, {
   useMemo,
   type PropsWithChildren,
 } from "react"
-import useSWR from "swr"
+import useSWR, { useSWRConfig } from "swr"
 
 type EntitiesContextType = {
   users: ProfileDto[]
@@ -38,7 +38,10 @@ export function EntitiesProvider({ children }: PropsWithChildren) {
     data: usersData,
     error: usersError,
     isLoading: usersLoading,
-  } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, fetcher)
+  } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, fetcher, {
+    refreshInterval: 5000,
+    fallback: [],
+  })
 
   const value = useMemo(
     () => ({
