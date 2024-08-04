@@ -16,7 +16,7 @@ export const ProfileChip = () => {
     <>
       {profile ? (
         <Link
-          href={`${locale}/${ROUTES.account}/${profile.slug}`}
+          href={`/${locale}/${ROUTES.account}/${profile.slug}`}
           className="flex items-center min-w-[155px] max-w-[200px] focus:shadow-sm hover:shadow-sm rounded-[5px]"
         >
           <div className="pl-5 text-paragraph text-right truncate">
