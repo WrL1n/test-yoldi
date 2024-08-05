@@ -2,16 +2,20 @@ import { Button } from "@/components/ui"
 import { ImageIcon, TrashIcon, UploadIcon } from "@/components/ui/icons"
 import { cn } from "@/shared/clsx"
 import { useScopedI18n } from "@/shared/i18n/client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface AccountBackgroundProps {
   isEditable?: boolean
+  backgroundUrl: string | undefined
 }
 
 const TIMEOUT_TO_DISABLE_BG_BUTTON_ON_MOBILES = 4000
 
-export const AccountBackground = ({ isEditable }: AccountBackgroundProps) => {
-  const existBg = false
+export const AccountBackground = ({
+  isEditable,
+  backgroundUrl,
+}: AccountBackgroundProps) => {
+  const existBg = !!backgroundUrl
 
   const t = useScopedI18n("account")
   const [isBgHovered, setIsBgHovered] = useState(false)
@@ -34,11 +38,25 @@ export const AccountBackground = ({ isEditable }: AccountBackgroundProps) => {
     }
   }
 
+  useEffect(() => {
+    if (backgroundUrl) {
+      document.documentElement.style.setProperty(
+        "--background-image",
+        `url(${backgroundUrl})`,
+      )
+    } else {
+      document.documentElement.style.setProperty("--background-image", "none")
+    }
+  }, [backgroundUrl])
+
+  const backgroundClass = backgroundUrl ? "bg-custom" : "bg-none"
+
   return (
     <section
       className={cn(
-        "absolute top-0 w-full h-[200px] grid place-content-center",
+        "absolute top-0 w-full h-[200px] grid place-content-center bg-cover bg-center",
         { "cursor-pointer": isEditable },
+        backgroundClass,
       )}
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}

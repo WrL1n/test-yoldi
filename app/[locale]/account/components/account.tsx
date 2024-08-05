@@ -51,10 +51,13 @@ export const Account = () => {
 
   return (
     <>
-      <AccountBackground isEditable={isCurrentUserProfilePage} />
+      <AccountBackground
+        isEditable={isCurrentUserProfilePage}
+        backgroundUrl={user?.cover?.url}
+      />
       <section className="flex flex-col w-full self-center md:max-w-[800px] h-[400px] px-5 lg:px-0">
         <div className="h-[100px] bg-transparent absolute top-[150px]">
-          <Avatar initials={"GG"} size="lg" src="" />
+          <Avatar initials={"GG"} size="lg" src={user?.image?.url} />
         </div>
         <div className="mt-[65px] grid grid-cols-1 md:grid-cols-[1fr_auto] gap-x-5 gap-y-2">
           <div className="flex flex-col gap-2.5 truncate">
