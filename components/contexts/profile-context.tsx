@@ -6,12 +6,16 @@ import React, {
   type PropsWithChildren,
 } from "react"
 import { useProtectedFetch } from "../hooks/use-protected-fetch"
-import { useAuthContext } from "./auth-context"
+import { useAuthActionsContext, useAuthContext } from "./auth-context"
 
 type ProfileContextType = {
   profile: ProfileDto | null
   error: Error | null
   isLoading: boolean
+}
+
+type ProfileActionsContextType = {
+  updateProfile: (updatedProfile: Partial<ProfileDto>) => Promise<ProfileDto>
 }
 
 const ProfileContext = createContext<ProfileContextType>({
@@ -20,20 +24,61 @@ const ProfileContext = createContext<ProfileContextType>({
   isLoading: false,
 })
 
+const ProfileActionsContext = createContext<ProfileActionsContextType>({
+  updateProfile: async () => {
+    throw new Error("updateProfile function not implemented")
+  },
+})
+
 export const useProfileContext = () => useContext(ProfileContext)
+export const useProfileActionsContext = () => useContext(ProfileActionsContext)
+
+const PROFILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/profile`
 
 export function ProfileProvider({ children }: PropsWithChildren) {
   const { isAuthenticated } = useAuthContext()
+  const { getToken } = useAuthActionsContext()
 
   const {
     data: profile,
     error,
     isLoading,
-  } = useProtectedFetch<ProfileDto>(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/profile`,
-  )
+    mutate,
+  } = useProtectedFetch<ProfileDto>(PROFILE_URL)
 
-  const value = useMemo(
+  const updateProfile = async (
+    updatedProfileData: Partial<ProfileDto>,
+  ): Promise<ProfileDto> => {
+    if (!isAuthenticated) {
+      throw new Error("User is not authenticated")
+    }
+
+    const token = await getToken()
+    if (!token) {
+      throw new Error("No token available")
+    }
+
+    const updatedProfile = { ...profile, ...updatedProfileData }
+
+    const response = await fetch(PROFILE_URL, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": token,
+      },
+      body: JSON.stringify(updatedProfile),
+    })
+
+    if (!response.ok) {
+      throw new Error("Failed to update profile")
+    }
+
+    const updatedData: ProfileDto = await response.json()
+    mutate(updatedData)
+    return updatedData
+  }
+
+  const profileValue = useMemo(
     () => ({
       profile: isAuthenticated ? profile ?? null : null,
       error: isAuthenticated ? error : null,
@@ -42,7 +87,18 @@ export function ProfileProvider({ children }: PropsWithChildren) {
     [profile, error, isLoading, isAuthenticated],
   )
 
+  const actionsValue = useMemo(
+    () => ({
+      updateProfile,
+    }),
+    [updateProfile],
+  )
+
   return (
-    <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>
+    <ProfileContext.Provider value={profileValue}>
+      <ProfileActionsContext.Provider value={actionsValue}>
+        {children}
+      </ProfileActionsContext.Provider>
+    </ProfileContext.Provider>
   )
 }

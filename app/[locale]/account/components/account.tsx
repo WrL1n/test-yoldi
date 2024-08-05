@@ -14,6 +14,7 @@ import { useParams } from "next/navigation"
 import { useCallback, useState } from "react"
 import { AccountBackground } from "./account-background"
 import { AccountSkeleton } from "./account-skeleton"
+import { EditProfileModal } from "./edit-profile-modal"
 
 const TOOLTIP_DURATION = 2000
 
@@ -88,10 +89,16 @@ export const Account = () => {
             </Tooltip>
           </div>
           {isCurrentUserProfilePage && (
-            <Button size="extra-sm" variant="outline" className="max-w-[200px]">
-              <PenIcon />
-              {t("edit-button")}
-            </Button>
+            <EditProfileModal>
+              <Button
+                size="extra-sm"
+                variant="outline"
+                className="max-w-[200px]"
+              >
+                <PenIcon />
+                {t("edit-button")}
+              </Button>
+            </EditProfileModal>
           )}
         </div>
 

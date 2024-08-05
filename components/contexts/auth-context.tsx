@@ -162,7 +162,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
       try {
         const response = await api.current.api.login(loginDto)
-        console.log("ttt", { response })
         await setAuthData(response.value)
         router.push(createLocaleRoute(locale, ROUTES.home))
       } catch (error) {
