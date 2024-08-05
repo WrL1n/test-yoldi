@@ -92,7 +92,7 @@ export const Avatar = memo(
         </RadixAvatar.Fallback>
 
         {isEditable && isHovered && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="absolute rounded-full inset-0 bg-black flex items-center justify-center">
             <CameraIcon className="text-white shrink-0 size-[50px]" />
           </div>
         )}

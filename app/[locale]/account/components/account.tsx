@@ -9,6 +9,7 @@ import { Avatar } from "@/components/ui/avatar"
 import { PenIcon } from "@/components/ui/icons"
 import { ExitIcon } from "@/components/ui/icons/exit"
 import { useScopedI18n } from "@/shared/i18n/client"
+import { getInitials } from "@/shared/utils"
 import { useParams } from "next/navigation"
 import { useCallback, useState } from "react"
 import { AccountBackground } from "./account-background"
@@ -30,6 +31,9 @@ export const Account = () => {
   const [isEmailClicked, setIsEmailClicked] = useState<boolean>(false)
 
   const isCurrentUserProfilePage = slug === profile?.slug
+  const initials = getInitials(
+    isCurrentUserProfilePage ? profile.name : user?.name ?? "",
+  )
 
   const onTouchName = useCallback(() => {
     if (isAboveMd) return null
@@ -57,7 +61,12 @@ export const Account = () => {
       />
       <section className="flex flex-col w-full self-center md:max-w-[800px] h-[400px] px-5 lg:px-0">
         <div className="h-[100px] bg-transparent absolute top-[150px]">
-          <Avatar initials={"GG"} size="lg" src={user?.image?.url} />
+          <Avatar
+            initials={initials}
+            size="lg"
+            src={user?.image?.url}
+            isEditable={isCurrentUserProfilePage}
+          />
         </div>
         <div className="mt-[65px] grid grid-cols-1 md:grid-cols-[1fr_auto] gap-x-5 gap-y-2">
           <div className="flex flex-col gap-2.5 truncate">
