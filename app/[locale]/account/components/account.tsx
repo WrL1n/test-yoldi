@@ -12,6 +12,7 @@ import { useScopedI18n } from "@/shared/i18n/client"
 import { useParams } from "next/navigation"
 import { useCallback, useState } from "react"
 import { AccountBackground } from "./account-background"
+import { AccountSkeleton } from "./account-skeleton"
 
 const TOOLTIP_DURATION = 2000
 
@@ -19,7 +20,7 @@ export const Account = () => {
   const t = useScopedI18n("account")
 
   const { slug } = useParams<{ slug: string }>()
-  const { user } = useUser(slug)
+  const { user, isLoading } = useUser(slug)
   const { isAboveMd } = useBreakpoint("md")
 
   const { logout } = useAuthActionsContext()
@@ -45,6 +46,8 @@ export const Account = () => {
       setIsEmailClicked(false)
     }, TOOLTIP_DURATION)
   }, [isAboveMd])
+
+  if (isLoading) return <AccountSkeleton />
 
   return (
     <>
@@ -83,7 +86,6 @@ export const Account = () => {
         <p className="mb-[60px] max-w-[600px] mt-[60px] text-paragraph text-pretty">
           {user?.description}
         </p>
-
         {isCurrentUserProfilePage && (
           <Button
             size="extra-sm"
