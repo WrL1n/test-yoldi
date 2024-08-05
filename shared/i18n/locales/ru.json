@@ -44,10 +44,12 @@
   "common": {
     "input-show-password": "Показать пароль",
     "input-hide-password": "Скрыть пароль",
-    "scroll-to-top": "Вверх!"
+    "scroll-to-top": "Вверх!",
+    "spinner-label": "Загрузка..."
   },
   "user-list": {
-    "title": "Список аккаунтов"
+    "title": "Список аккаунтов",
+    "loading-error": "Ошибка загрузки. Попробуйте позже"
   },
   "account": {
     "edit-button": "Редактировать",
