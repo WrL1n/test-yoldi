@@ -6,6 +6,7 @@ import { EnvelopeIcon, LockIcon } from "@/components/ui/icons"
 import { useScopedI18n } from "@/shared/i18n/client"
 import { isApiError } from "@/shared/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -42,7 +43,10 @@ export const LoginForm = () => {
     resolver: zodResolver(schema),
   })
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true)
     try {
       await login(data)
     } catch (error) {
@@ -52,6 +56,8 @@ export const LoginForm = () => {
           message: error?.error?.message || t("submit.error"),
         })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
   const backendError = errors?.root?.backendError?.message
@@ -99,7 +105,9 @@ export const LoginForm = () => {
           {backendError}
         </div>
       )}
-      <Button type="submit">{t("submit.button")}</Button>
+      <Button type="submit" isLoading={isLoading}>
+        {t("submit.button")}
+      </Button>
     </form>
   )
 }
