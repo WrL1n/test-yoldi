@@ -30,14 +30,14 @@ export const Tooltip = ({
             "radix-side-bottom:animate-slide-up-fade",
             "radix-side-left:animate-slide-right-fade",
             "inline-flex items-center rounded-[5px] px-4 py-2.5",
-            "bg-background-secondary dark:bg-red-300",
+            "bg-background-secondary",
           )}
         >
           {withArrow && (
             <TooltipPrimitive.Arrow className="fill-current text-gray" />
           )}
           {message && (
-            <span className="block text-subtitle leading-none text-gray dark:text-blue-300">
+            <span className="block text-subtitle leading-none text-gray">
               {message}
             </span>
           )}
