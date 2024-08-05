@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "@radix-ui/themes/styles.css"
 import "../../public/globals.css"
 import { Page } from "@/components/page"
 import { cn } from "@/shared/clsx"
