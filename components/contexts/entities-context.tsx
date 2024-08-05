@@ -5,7 +5,9 @@ import React, {
   useMemo,
   type PropsWithChildren,
 } from "react"
-import useSWR, { useSWRConfig } from "swr"
+import useSWR from "swr"
+
+const REFRESH_INTERVAl = 5000
 
 type EntitiesContextType = {
   users: ProfileDto[]
@@ -39,7 +41,7 @@ export function EntitiesProvider({ children }: PropsWithChildren) {
     error: usersError,
     isLoading: usersLoading,
   } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, fetcher, {
-    refreshInterval: 5000,
+    refreshInterval: REFRESH_INTERVAl,
     fallback: [],
   })
 
