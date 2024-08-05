@@ -11,7 +11,7 @@ export function Header() {
   const locale = useCurrentLocale()
 
   return (
-    <header className="sticky top-0 bg-white">
+    <header className="sticky top-0 bg-white z-10">
       <nav className="flex items-center justify-between border-b border-strokes-secondary px-5 py-[15px] h-20">
         <div className="gap-5 flex items-center">
           <Link

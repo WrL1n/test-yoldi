@@ -1,3 +1,5 @@
+"use client"
+
 import { cn } from "@/shared/clsx"
 import { useScopedI18n } from "@/shared/i18n/client"
 import { useEffect, useState } from "react"
