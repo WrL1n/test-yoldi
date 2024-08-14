@@ -12,7 +12,9 @@ import {
   useMemo,
   useState,
 } from "react"
+import { useSWRConfig } from "swr"
 import { useApiContext } from "./api-context"
+import { PROFILE_URL } from "./profile-context"
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -116,6 +118,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const { api } = useApiContext()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
+  const { cache } = useSWRConfig()
 
   const getToken = useCallback(async (): Promise<string | null> => {
     const storedData = localStorage.getItem(LOCAL_STORAGE_KEY)
@@ -192,6 +195,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   const logout = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_KEY)
+    cache.delete(PROFILE_URL)
     setIsAuthenticated(false)
     router.push(createLocaleRoute(locale, ROUTES.home))
   }, [router, locale])

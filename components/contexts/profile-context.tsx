@@ -33,7 +33,7 @@ const ProfileActionsContext = createContext<ProfileActionsContextType>({
 export const useProfileContext = () => useContext(ProfileContext)
 export const useProfileActionsContext = () => useContext(ProfileActionsContext)
 
-const PROFILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/profile`
+export const PROFILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/profile`
 
 export function ProfileProvider({ children }: PropsWithChildren) {
   const { isAuthenticated } = useAuthContext()
