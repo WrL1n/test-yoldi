@@ -21,10 +21,10 @@ export const ApiContext = createContext<ApiContextType>({
 
 export const useApiContext = () => useContext(ApiContext)
 const httpClient = new HttpClient({ baseUrl: process.env.NEXT_PUBLIC_API_URL })
-const noRakeApi = new Api(httpClient)
+const apiClient = new Api(httpClient)
 
 export function ApiProvider({ children }: PropsWithChildren) {
-  const api = useRef(noRakeApi)
+  const api = useRef(apiClient)
   // Load user data on mount
   // const updateAuthHeader = (token: string) => {
   //   httpClient.instance.defaults.headers.common['Authorization'] = token ? token : '';
